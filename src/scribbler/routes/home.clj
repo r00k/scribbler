@@ -2,7 +2,8 @@
   (:require [scribbler.layout :as layout]
             [compojure.core :refer [defroutes GET]]
             [ring.util.http-response :refer [ok]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [scribbler.db.core :as db]))
 
 (defn home-page []
   (layout/render
@@ -11,7 +12,10 @@
 (defn about-page []
   (layout/render "about.html"))
 
+(defn users-page []
+  (layout/render "users.html" { :user-count (:count (first (db/get-users-count))) }))
+
 (defroutes home-routes
   (GET "/" [] (home-page))
-  (GET "/about" [] (about-page)))
-
+  (GET "/about" [] (about-page))
+  (GET "/users" [] (users-page)))
